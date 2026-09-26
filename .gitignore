@@ -1,0 +1,14 @@
+build/
+install/
+log/
+__pycache__/
+*.py[cod]
+*.bak
+*.backup
+*.before_*
+*.log
+*.tmp
+*~
+.vscode/
+.idea/
+.DS_Store

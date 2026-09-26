@@ -1,0 +1,477 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="navigrid_world">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim8-imu-system"
+            name="gz::sim::systems::Imu"/>
+
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+
+    <!-- Arena boundary walls: 30m x 30m -->
+    <!-- Shared Start Zone A for both routes -->
+    <model name="start_zone_A">
+      <static>true</static>
+      <pose>-4.5 -13 0.011 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>12 1.2 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 1</ambient>
+            <diffuse>0.1 0.8 0.1 1</diffuse>
+            <emissive>0.02 0.2 0.02 1</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Shared Goal Zone B for both routes -->
+    <model name="goal_zone_B">
+      <static>true</static>
+      <pose>-4.5 13 0.011 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>12 1.2 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.1 0.1 1</ambient>
+            <diffuse>0.8 0.1 0.1 1</diffuse>
+            <emissive>0.2 0.02 0.02 1</emissive>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="north_wall">
+      <static>true</static>
+      <pose>0 15 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>30 0.3 1.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>30 0.3 1.5</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="south_wall">
+      <static>true</static>
+      <pose>0 -15 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>30 0.3 1.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>30 0.3 1.5</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="east_wall">
+      <static>true</static>
+      <pose>15 0 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.3 30 1.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.3 30 1.5</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="west_wall">
+      <static>true</static>
+      <pose>-15 0 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.3 30 1.5</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.3 30 1.5</size></box></geometry></visual>
+      </link>
+    </model>
+
+
+    <!--
+      Incline ramp for the elevated route.
+      The ramp is 6m long, 2m wide, and 0.3m thick.
+      It is tilted to create a sloped path for the robot.
+    -->
+    <!-- Direct elevated route from Start Zone A to Goal Zone B -->
+    <!-- Route runs south-to-north along x = -9 -->
+
+    <model name="direct_route_ascending_ramp">
+      <static>true</static>
+      <pose>-9 -9 0.3 0.15 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 6 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2 6 0.3</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="direct_route_elevated_platform">
+      <static>true</static>
+      <pose>-9 0 0.746 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 12 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2 12 0.3</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="direct_route_descending_ramp">
+      <static>true</static>
+      <pose>-9 9 0.3 -0.15 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 6 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2 6 0.3</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+
+    <!-- Zigzag corridor: alternating openings -->
+
+    <model name="zigzag_wall_1">
+      <static>true</static>
+      <pose>-1 -8 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="zigzag_wall_2">
+      <static>true</static>
+      <pose>1 -2 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="zigzag_wall_3">
+      <static>true</static>
+      <pose>-1 4 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="zigzag_wall_4">
+      <static>true</static>
+      <pose>1 10 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.3 1</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+
+    <!-- Static obstacle 1: Pillar -->
+    <model name="pillar_1">
+      <static>true</static>
+      <pose>10 -8 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Static obstacle 2: Pillar -->
+    <model name="pillar_2">
+      <static>true</static>
+      <pose>10 8 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Static obstacle 3: Warehouse rack -->
+    <model name="warehouse_rack">
+      <static>true</static>
+      <pose>10 0 0.75 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>2 0.8 1.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>2 0.8 1.5</size></box></geometry>
+        </visual>
+      </link>
+    </model>
+
+
+  <actor name="pedestrian_1">
+    <skin>
+      <filename>https://fuel.gazebosim.org/1.0/Mingfei/models/actor/tip/files/meshes/walk.dae</filename>
+      <scale>1.0</scale>
+    </skin>
+    <animation name="walk">
+      <filename>https://fuel.gazebosim.org/1.0/Mingfei/models/actor/tip/files/meshes/walk.dae</filename>
+      <interpolate_x>true</interpolate_x>
+    </animation>
+    <script>
+      <loop>true</loop>
+      <delay_start>0.0</delay_start>
+      <auto_start>true</auto_start>
+      <trajectory id="0" type="walk" tension="0.6">
+        <waypoint>
+          <time>0</time>
+          <pose>7 -6 1.0 0 0 0</pose>
+        </waypoint>
+        <waypoint>
+          <time>4</time>
+          <pose>13 -6 1.0 0 0 0</pose>
+        </waypoint>
+        <waypoint>
+          <time>4.5</time>
+          <pose>13 -6 1.0 0 0 3.14159</pose>
+        </waypoint>
+        <waypoint>
+          <time>8.5</time>
+          <pose>7 -6 1.0 0 0 3.14159</pose>
+        </waypoint>
+      </trajectory>
+    </script>
+  </actor>
+
+
+    <model name="secondary_robot">
+      <pose>-6 0 0.325 0 0 0</pose>
+
+      <link name="chassis">
+        <pose>-0.151427 0 0.175 0 0 0</pose>
+        <inertial>
+          <mass>1.14395</mass>
+          <inertia>
+            <ixx>0.126164</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.416519</iyy>
+            <iyz>0</iyz>
+            <izz>0.481014</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <box><size>2.01142 1 0.568726</size></box>
+          </geometry>
+          <material>
+            <ambient>0.2 0.8 0.2 1</ambient>
+            <diffuse>0.2 0.8 0.2 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>2.01142 1 0.568726</size></box>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name="left_wheel">
+        <pose>0.554283 0.625029 -0.025 -1.5707 0 0</pose>
+        <inertial>
+          <mass>2</mass>
+          <inertia>
+            <ixx>0.145833</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>0.145833</iyy><iyz>0</iyz><izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry><sphere><radius>0.3</radius></sphere></geometry>
+        </visual>
+        <collision name="collision">
+          <geometry><sphere><radius>0.3</radius></sphere></geometry>
+          <surface>
+            <friction>
+              <ode><mu>1</mu><mu2>1</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <link name="right_wheel">
+        <pose>0.554282 -0.625029 -0.025 -1.5707 0 0</pose>
+        <inertial>
+          <mass>2</mass>
+          <inertia>
+            <ixx>0.145833</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>0.145833</iyy><iyz>0</iyz><izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry><sphere><radius>0.3</radius></sphere></geometry>
+        </visual>
+        <collision name="collision">
+          <geometry><sphere><radius>0.3</radius></sphere></geometry>
+          <surface>
+            <friction>
+              <ode><mu>1</mu><mu2>1</mu2></ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+
+      <link name="caster">
+        <pose>-0.957138 0 -0.125 0 0 0</pose>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.1</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>0.1</iyy><iyz>0</iyz><izz>0.1</izz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry><sphere><radius>0.2</radius></sphere></geometry>
+        </visual>
+        <collision name="collision">
+          <geometry><sphere><radius>0.2</radius></sphere></geometry>
+        </collision>
+      </link>
+
+      <joint name="left_wheel_joint" type="revolute">
+        <parent>chassis</parent>
+        <child>left_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name="right_wheel_joint" type="revolute">
+        <parent>chassis</parent>
+        <child>right_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name="caster_wheel" type="ball">
+        <parent>chassis</parent>
+        <child>caster</child>
+      </joint>
+
+      <plugin filename="gz-sim-diff-drive-system"
+              name="gz::sim::systems::DiffDrive">
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>1.25</wheel_separation>
+        <wheel_radius>0.3</wheel_radius>
+        <odom_publish_frequency>1</odom_publish_frequency>
+        <max_linear_acceleration>1</max_linear_acceleration>
+        <min_linear_acceleration>-1</min_linear_acceleration>
+        <max_angular_acceleration>2</max_angular_acceleration>
+        <min_angular_acceleration>-2</min_angular_acceleration>
+        <max_linear_velocity>0.5</max_linear_velocity>
+        <min_linear_velocity>-0.5</min_linear_velocity>
+        <max_angular_velocity>1</max_angular_velocity>
+        <min_angular_velocity>-1</min_angular_velocity>
+      </plugin>
+    </model>
+
+</world>
+</sdf>
